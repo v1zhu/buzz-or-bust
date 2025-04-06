@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Which Song is More Popular?</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1> Good try! Thanks for playing!</h1>
+    <br>
+    <div id="score-display"> Streak: <span id="finalScore"></span></div>
+    <br>
+    <button onclick="window.location.href='/'">Play Again? 🔁</button>
+    
+    <br>
+    <br>
+    <button id='start_btn' onclick="window.location.href='/starting'">Back to starting page</button>
+    <script>
+        let savedScore = localStorage.getItem('finalScore');
+        // default result to 0 if there isnt a saved score
+        if (savedScore === null) {
+            savedScore = "0"; 
+        }
+        document.getElementById("finalScore").innerText = savedScore;
+    </script>
+</body>
+</html>

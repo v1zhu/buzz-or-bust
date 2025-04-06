@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Which Song is More Popular?</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>🎵 Popularity: Buzz or Bust 🎵</h1>
+    <div id="score-display">Streak: <span id="streak">0</span></div>
+    <div id="game">
+        <div class="song" id="song1"></div>
+        <div class="song" id="song2"></div>
+    </div>
+    <p id="result"></p>
+    
+    <script>
+        let streak = 0;
+    
+
+        async function loadSongs() {
+            document.getElementById("result").innerText = "";  // Clear previous result
+            const response = await fetch('/get-songs');  // wait for songs --> Fetch songs from the server before moving on 
+            const songs = await response.json();  // gets converted to WEEE jAVA SCRIPT OBJECT @@
+
+            // Display song names, artists, and a "Choose" button
+            document.getElementById("song1").innerHTML = `
+                <p><strong>${songs[0].track_name}</strong><br>by ${songs[0].track_artist}</p>
+                <button onclick="checkAnswer(${songs[0].track_popularity}, ${songs[1].track_popularity})">Choose</button>
+            `;
+            document.getElementById("song2").innerHTML = `
+                <p><strong>${songs[1].track_name}</strong><br>by ${songs[1].track_artist}</p>
+                <button onclick="checkAnswer(${songs[1].track_popularity}, ${songs[0].track_popularity})">Choose</button>
+            `;
+        }
+
+        function checkAnswer(choice, other) {
+            const result = document.getElementById("result");
+            if (choice >= other) {
+                result.innerText = "✅ Correct! The song you chose is more popular.";
+                streak++;
+                document.getElementById("streak").innerText = streak;
+                setTimeout(loadSongs, 1000);
+            } else {
+                result.innerText = "❌ Wrong! The song you chose is less popular.";
+                localStorage.setItem('finalScore', streak);
+                setTimeout(() => {
+                    window.location.href = '/ending';
+                }, 1000);
+            }
+        }
+        
+        // Load initial songs when page loads
+        loadSongs();
+    </script>
+    
+    <button id='start_btn' onclick="window.location.href='/starting'">Back to starting page</button>
+    
+</body>
+</html>
